@@ -173,6 +173,13 @@ def logout():
         return redirect(url_for('login'))
     return render_template('logout.html')
 
+@app.route('/about/', methods=['GET', 'POST'])
+def about():
+    if request.method == 'POST':
+        session.clear()
+        return redirect(url_for('about'))
+    return render_template('about.html')
+
 @app.route('/')
 def index():
     search_query = request.args.get('q')
