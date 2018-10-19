@@ -180,6 +180,13 @@ def about():
         return redirect(url_for('about'))
     return render_template('about.html')
 
+@app.route('/contact/', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        session.clear()
+        return redirect(url_for('contact'))
+    return render_template('contact.html')
+
 @app.route('/')
 def index():
     search_query = request.args.get('q')
