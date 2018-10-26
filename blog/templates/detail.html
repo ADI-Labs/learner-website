@@ -13,4 +13,5 @@
 {% block content %}
   <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %I:%M%p') }}</p>
   {{ entry.html_content }}
+  <button class="btn btn-primary" onclick="location.href='{{ url_for('edit', slug=entry.slug) }}'">Edit</button>
 {% endblock %}

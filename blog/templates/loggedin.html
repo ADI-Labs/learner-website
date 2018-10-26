@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Blog entries{% endblock %}
+
+{% block content_title %}{% if search %}Search "{{ search }}"{% else %}Blog entries{% endif %}{% endblock %}
+
+{% block content %}
+  {% for entry in object_list %}
+    <h3>
+      <a href="{% if entry.published %}{{ url_for('detail', slug=entry.slug) }}{% else %}{{ url_for('edit', slug=entry.slug) }}{% endif %}">
+        {{ entry.title }}
+      </a>
+    </h3>
+    <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %G:%I%p') }}</p>  
+  {% else %}
+    <p>No entries have been created yet.</p>
+  {% endfor %}
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" onclick="location.href='{{ url_for('create') }}'">Create</button>
+    </div>
+    {% include "includes/pagination.html" %}
+{% endblock %}
