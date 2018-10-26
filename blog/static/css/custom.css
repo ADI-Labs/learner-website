@@ -24,7 +24,11 @@
     color: #9bddff;
 }
 
-/* This makes the nav bar buttons Columbia blue once the user clicks it (active) TESTING*/
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
-	color: #9bddff;
+/* This makes the nav bar items Columbia blue, well, just the About button */
+.navbar-light .navbar-nav .nav-link {
+    color: #9bddff;
+}
+
+.navbar-light .navbar-nav .nav-link.disabled {
+    color: #9bddff;
 }
