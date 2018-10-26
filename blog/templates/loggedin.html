@@ -14,11 +14,9 @@
     <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %G:%I%p') }}</p>  
   {% else %}
     <p>No entries have been created yet.</p>
-    <div class="col-sm-offset-2 col-sm-10">
-          <button class="btn btn-primary" onclick="location.href='{{ url_for('create') }}'">Create</button>
-    </div>
   {% endfor %}
-  {# address this bug
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-primary" onclick="location.href='{{ url_for('create') }}'">Create</button>
+    </div>
     {% include "includes/pagination.html" %}
-  #}
 {% endblock %}
