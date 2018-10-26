@@ -1,0 +1,30 @@
+/*!
+ * Testing a new CSS Page
+ */
+
+/* This makes the serach button Columbia blue */
+ .btn-outline-success {
+    color: #99ccff;
+    background-color: transparent;
+    background-image: none;
+    border-color: #99ccff;
+}
+
+/*This fills the search button with Columbia blue once the user hovers their mouse over it */
+.btn-outline-success:hover {
+	color: ##ffffff
+	border-color: #99ccff;
+	background-color: #99ccff;
+	border-color: #ffffff;
+
+}
+ 
+ /* This makes the nav bar buttons Columbia blue once the user clicks it (active) */
+.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
+    color: #9bddff;
+}
+
+/* This makes the nav bar buttons Columbia blue once the user clicks it (active) TESTING*/
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
+	color: #9bddff;
+}
