@@ -161,7 +161,7 @@ def login():
             session['logged_in'] = True
             session.permanent = True  # Use cookie to store session.
             flash('You are now logged in.', 'success')
-            return redirect(next_url or url_for('index'))
+            return redirect(next_url or url_for('logged_in') or url_for('index'))
         else:
             flash('Incorrect password.', 'danger')
     return render_template('login.html', next_url=next_url)
@@ -172,6 +172,11 @@ def logout():
         session.clear()
         return redirect(url_for('login'))
     return render_template('logout.html')
+
+@app.route('/loggedin/')
+@login_required
+def logged_in():
+    return render_template('loggedin.html')
 
 @app.route('/about/', methods=['GET', 'POST'])
 def about():
