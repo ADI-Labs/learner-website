@@ -32,3 +32,7 @@
 .navbar-light .navbar-nav .nav-link.disabled {
     color: #9bddff;
 }
+
+.nav-link {
+    color: #9bddff;
+}
