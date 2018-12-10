@@ -19,3 +19,7 @@ pip3 install -r requirements.txt
 ```
 
 ## Running The Code
+
+``` bash
+python3 app.py
+```
