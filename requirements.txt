@@ -2,6 +2,7 @@ flask
 bs4
 micawber
 pygments
+pylint==1.9.4
 markdown
 peewee
 gunicorn

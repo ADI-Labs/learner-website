@@ -11,9 +11,10 @@ from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
-from peewee import *
+from peewee import IntegrityError
 from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
-from playhouse.sqlite_ext import *
+from playhouse.sqlite_ext import CharField, TextField
+from playhouse.sqlite_ext import BooleanField, DateTimeField, FTSModel, SQL
 
 
 # Blog configuration values.
@@ -82,7 +83,7 @@ class Entry(flask_db.Model):
     def save(self, *args, **kwargs):
         # Generate a URL-friendly representation of the entry's title.
         if not self.slug:
-            self.slug = re.sub('[^\w]+', '-', self.title.lower()).strip('-')
+            self.slug = re.sub(r'[^\w]+', '-', self.title.lower()).strip('-')
         ret = super(Entry, self).save(*args, **kwargs)
 
         # Store search content.
@@ -110,11 +111,11 @@ class Entry(flask_db.Model):
 
     @classmethod
     def public(cls):
-        return Entry.select().where(Entry.published == True)
+        return Entry.select().where(Entry.published)
 
     @classmethod
     def drafts(cls):
-        return Entry.select().where(Entry.published == False)
+        return Entry.select().where(Entry.published is False)
 
     @classmethod
     def search(cls, query):
@@ -122,8 +123,7 @@ class Entry(flask_db.Model):
         if not words:
             # Return an empty query.
             return Entry.noop()
-        else:
-            search = ' '.join(words)
+        search = ' '.join(words)
 
         # Query the full-text search index for entries matching the given
         # search query, then join the actual Entry data on the matching
@@ -133,14 +133,16 @@ class Entry(flask_db.Model):
                 .join(FTSEntry, on=(Entry.id == FTSEntry.docid))
                 .where(
                     FTSEntry.match(search) &
-                    (Entry.published == True))
+                    (Entry.published))
                 .order_by(SQL('score')))
+
 
 class FTSEntry(FTSModel):
     content = TextField()
 
     class Meta:
         database = database
+
 
 def login_required(fn):
     @functools.wraps(fn)
@@ -149,6 +151,7 @@ def login_required(fn):
             return fn(*args, **kwargs)
         return redirect(url_for('login', next=request.path))
     return inner
+
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -161,10 +164,11 @@ def login():
             session['logged_in'] = True
             session.permanent = True  # Use cookie to store session.
             flash('You are now logged in.', 'success')
-            return redirect(next_url or url_for('logged_in') or url_for('index'))
-        else:
-            flash('Incorrect password.', 'danger')
+            return redirect(next_url or url_for(
+                'logged_in') or url_for('index'))
+        flash('Incorrect password.', 'danger')
     return render_template('login.html', next_url=next_url)
+
 
 @app.route('/logout/', methods=['GET', 'POST'])
 def logout():
@@ -172,6 +176,7 @@ def logout():
         session.clear()
         return redirect(url_for('login'))
     return render_template('logout.html')
+
 
 @app.route('/loggedin/')
 @login_required
@@ -192,6 +197,7 @@ def logged_in():
         search=search_query,
         check_bounds=False)
 
+
 @app.route('/about/', methods=['GET', 'POST'])
 def about():
     if request.method == 'POST':
@@ -199,12 +205,14 @@ def about():
         return redirect(url_for('about'))
     return render_template('about.html')
 
+
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
         session.clear()
         return redirect(url_for('contact'))
     return render_template('contact.html')
+
 
 @app.route('/')
 def index():
@@ -223,6 +231,7 @@ def index():
         query,
         search=search_query,
         check_bounds=False)
+
 
 def _create_or_edit(entry, template):
     if request.method == 'POST':
@@ -243,21 +252,23 @@ def _create_or_edit(entry, template):
                 flash('Entry saved successfully.', 'success')
                 if entry.published:
                     return redirect(url_for('detail', slug=entry.slug))
-                else:
-                    return redirect(url_for('edit', slug=entry.slug))
+                return redirect(url_for('edit', slug=entry.slug))
 
     return render_template(template, entry=entry)
+
 
 @app.route('/create/', methods=['GET', 'POST'])
 @login_required
 def create():
     return _create_or_edit(Entry(title='', content=''), 'create.html')
 
+
 @app.route('/drafts/')
 @login_required
 def drafts():
     query = Entry.drafts().order_by(Entry.timestamp.desc())
     return object_list('index.html', query, check_bounds=False)
+
 
 @app.route('/<slug>/')
 def detail(slug):
@@ -268,11 +279,13 @@ def detail(slug):
     entry = get_object_or_404(query, Entry.slug == slug)
     return render_template('detail.html', entry=entry)
 
+
 @app.route('/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(slug):
     entry = get_object_or_404(Entry, Entry.slug == slug)
     return _create_or_edit(entry, 'edit.html')
+
 
 @app.template_filter('clean_querystring')
 def clean_querystring(request_args, *keys_to_remove, **new_values):
@@ -287,13 +300,16 @@ def clean_querystring(request_args, *keys_to_remove, **new_values):
     querystring.update(new_values)
     return urllib.urlencode(querystring)
 
+
 @app.errorhandler(404)
 def not_found(exc):
     return Response('<h3>Not found</h3>'), 404
 
+
 def main():
     database.create_tables([Entry, FTSEntry], safe=True)
     app.run(debug=True)
+
 
 if __name__ == '__main__':
     main()
