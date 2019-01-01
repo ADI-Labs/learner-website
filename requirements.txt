@@ -1,8 +1,8 @@
 flask
 bs4
 micawber
-parse==1.9.0
 pygments
+pylint==1.9.4
 markdown
 peewee
 gunicorn
