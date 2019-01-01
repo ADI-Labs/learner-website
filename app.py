@@ -11,9 +11,10 @@ from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
-from peewee import *
+from peewee import IntegrityError
 from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
-from playhouse.sqlite_ext import *
+from playhouse.sqlite_ext import CharField, TextField
+from playhouse.sqlite_ext import BooleanField, DateTimeField, FTSModel, SQL
 
 
 # Blog configuration values.
@@ -122,8 +123,7 @@ class Entry(flask_db.Model):
         if not words:
             # Return an empty query.
             return Entry.noop()
-        else:
-            search = ' '.join(words)
+        search = ' '.join(words)
 
         # Query the full-text search index for entries matching the given
         # search query, then join the actual Entry data on the matching
@@ -166,8 +166,7 @@ def login():
             flash('You are now logged in.', 'success')
             return redirect(next_url or url_for(
                 'logged_in') or url_for('index'))
-        else:
-            flash('Incorrect password.', 'danger')
+        flash('Incorrect password.', 'danger')
     return render_template('login.html', next_url=next_url)
 
 
@@ -253,8 +252,7 @@ def _create_or_edit(entry, template):
                 flash('Entry saved successfully.', 'success')
                 if entry.published:
                     return redirect(url_for('detail', slug=entry.slug))
-                else:
-                    return redirect(url_for('edit', slug=entry.slug))
+                return redirect(url_for('edit', slug=entry.slug))
 
     return render_template(template, entry=entry)
 
