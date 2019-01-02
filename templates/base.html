@@ -71,7 +71,12 @@
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       <!-- <button class="btn btn-outline-success my-2 my-sm-0" href="{{ url_for('login') }}" target="">Login</a></button> -->
-      <a class="nav-link" href="{{ url_for('login') }}" target="">Login</a>
+      <!-- this is the login/logout -->
+      {% if session.logged_in %}
+        <a class="nav-link" href="{{ url_for('logout') }}" target="">Log Out</a>
+      {% else %}
+        <a class="nav-link" href="{{ url_for('login') }}" target="">Login</a>
+      {% endif %}
     </form>
   </div>
 </nav>
