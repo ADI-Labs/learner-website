@@ -1,5 +1,5 @@
 .highlight {
-	background: #040400;
+	background: #FEFCFF;
 	color: #FFFFFF;
 }
 
@@ -37,7 +37,7 @@
 .highlight span.mo { color: #A1FF24; }
 .highlight span.mi { color: #A1FF24; }
 .highlight span.mh { color: #A1FF24; }
-.highlight span.o { color: #EBE1B4; }
+.highlight span.o { color: #10; }
 .highlight span.si { color: #DA96A3; }
 .highlight span.sh { color: #BBFB8D; }
 .highlight span.na { color: #AEE674; }
