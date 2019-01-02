@@ -140,7 +140,7 @@ class Entry(flask_db.Model):
 class FTSEntry(FTSModel):
     content = TextField()
 
-    class Meta:
+    class Meta(FTSModel):
         database = database
 
 
