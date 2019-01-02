@@ -52,6 +52,14 @@
         <!--<a class="nav-link" href="contact.html">Contact Us</a>-->
         <a class="nav-link" href="{{ url_for('contact') }}" target="">Contact Us</a>
       </li>
+      {% if session.logged_in %}
+      <li>
+        <a class="nav-link" href="{{ url_for('drafts') }}" target="">Drafts</a>
+      </li>
+      {% else %}
+        <!--<a class="nav-link" href="{{ url_for('drafts') }}" target="">Login</a>-->
+      {% endif %}
+
       <!--<li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
