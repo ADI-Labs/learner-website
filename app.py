@@ -107,7 +107,7 @@ class Entry(flask_db.Model):
         else:
             FTSEntry.insert({
                 FTSEntry.docid: self.id,
-                FTSEntry.content: content}).execute()
+                FTSEntry.content: content}, database=None).execute()
 
     @classmethod
     def public(cls):
