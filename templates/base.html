@@ -75,9 +75,16 @@
         <a class="nav-link disabled" href="#">Disabled</a>
       </li> -->
     </ul>
+    {% block search_bar %}
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <form action="{{ url_for('index') }}" class="navbar-form navbar-right" id="search-form" method="get" role="search">
+        <div class="form-group">
+          <input class="form-control" name="q" placeholder="Search" aria-label="Search" type="text" value="{% if search %}{{ search }}{% endif %}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </div>
+      </form>
+      {% endblock %}
+    
       <!-- <button class="btn btn-outline-success my-2 my-sm-0" href="{{ url_for('login') }}" target="">Login</a></button> -->
       <!-- this is the login/logout -->
       {% if session.logged_in %}
